@@ -1,5 +1,7 @@
 import 'package:e_commerce_app/constants.dart';
+import 'package:e_commerce_app/controller/cart_controller.dart';
 import 'package:e_commerce_app/model/best_selling_model.dart';
+import 'package:e_commerce_app/model/cart_product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -130,47 +132,62 @@ class DetailsPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Container(
-          height: 80,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey.shade300,
-              ),
+        height: 80,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.shade300,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text("Price",
-                      style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  Text(
-                    "\$${bestSellingModel!.price}",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(150, 50),
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3),
-                  ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                Text("Price",
+                    style: TextStyle(fontSize: 16, color: Colors.grey)),
+                Text(
+                  "\$${bestSellingModel!.price}",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor),
                 ),
-                child: Text(
-                  "Add to cart",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ],
-          ),),
+              ],
+            ),
+            GetBuilder<CartController>(
+                init: CartController(),
+                builder: (controller) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      controller.addProductToCart(
+                        CartProductModel(
+                          name: bestSellingModel!.name,
+                          image: bestSellingModel!.image,
+                          price: bestSellingModel!.price,
+                          quantity: 1,
+                          id: bestSellingModel!.id,
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(150, 50),
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    child: Text(
+                      "Add to cart",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  );
+                }),
+          ],
+        ),
+      ),
     );
   }
 }

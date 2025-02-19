@@ -1,5 +1,7 @@
+import 'package:e_commerce_app/controller/local_storage_controller.dart';
 import 'package:e_commerce_app/helper/services/firestore_user.dart';
 import 'package:e_commerce_app/model/user_model.dart';
+import 'package:e_commerce_app/view/control_view.dart';
 import 'package:e_commerce_app/view/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -15,10 +17,16 @@ class AuthControler extends GetxController {
 
   String? get getUser => _user.value?.email;
 
+  final LocalStorageController _localStorage =
+      Get.find<LocalStorageController>();
+
   @override
   void onInit() {
     super.onInit();
     _user.bindStream(_auth.authStateChanges());
+    if (_user.value != null) {
+      getCurrentUserData(_user.value!.uid);
+    }
   }
 
   @override
@@ -70,13 +78,19 @@ class AuthControler extends GetxController {
     try {
       await _auth
           .signInWithEmailAndPassword(email: email!, password: password!)
-          .then((user) {
-        saveUser(user);
+          .then((user) async {
+        await getCurrentUserData(user.user!.uid);
       });
-      Get.offAll(HomePage());
+      Get.offAll(ControlView());
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
+  }
+
+  Future<void> getCurrentUserData(String uid) async {
+    await FirestoreUser().getUser(uid).then((user) {
+      setUser(UserModel.fromJson(user.data() as Map<String, dynamic>));
+    });
   }
 
   void emailAndPasswordSignUp() async {
@@ -87,20 +101,25 @@ class AuthControler extends GetxController {
         saveUser(user);
       });
 
-      Get.offAll(HomePage());
+      Get.offAll(ControlView());
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
   }
 
   void saveUser(UserCredential user) async {
-    await FirestoreUser().addUser(
-      UserModel(
-        userId: user.user!.uid,
-        email: user.user!.email,
-        name: name == null ? user.user!.displayName : name,
-        profilePic: '',
-      ),
+    UserModel userModel = UserModel(
+      userId: user.user!.uid,
+      email: user.user!.email,
+      name: name == null ? user.user!.displayName : name,
+      profilePic: '',
     );
+
+    await FirestoreUser().addUser(userModel);
+    setUser(userModel);
+  }
+
+  void setUser(UserModel userModel) async {
+    await _localStorage.setUser(userModel);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:e_commerce_app/controller/cart_controller.dart';
 import 'package:e_commerce_app/firebase_options.dart';
 import 'package:e_commerce_app/view/auth_pages/login_page.dart';
 import 'package:e_commerce_app/view/control_view.dart';
@@ -12,6 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Get.put(CartController());
   runApp(const MyApp());
 }
 

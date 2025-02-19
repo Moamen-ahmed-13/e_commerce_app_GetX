@@ -2,7 +2,7 @@ import 'package:e_commerce_app/helper/color_extention.dart';
 import 'package:flutter/material.dart';
 
 class BestSellingModel {
-  String? image, name, description, price, sized;
+  String? image, name, description, price, sized, id;
 
   BestSellingModel({
     this.image,
@@ -10,6 +10,7 @@ class BestSellingModel {
     this.description,
     this.price,
     this.sized,
+    this.id,
   });
   Color? color;
 
@@ -17,6 +18,7 @@ class BestSellingModel {
     if (json == null) {
       return;
     }
+    id = json['id'];
     image = json['image'];
     name = json['name'];
     description = json['description'];
@@ -32,6 +34,7 @@ class BestSellingModel {
     data['price'] = this.price;
     data['sized'] = this.sized;
     data['color'] = this.color;
+    data['id'] = this.id;
     return data;
   }
 }
