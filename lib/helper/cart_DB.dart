@@ -2,7 +2,6 @@ import 'package:e_commerce_app/constants.dart';
 import 'package:e_commerce_app/model/cart_product_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 class CartDbHelper {
   CartDbHelper._();
 

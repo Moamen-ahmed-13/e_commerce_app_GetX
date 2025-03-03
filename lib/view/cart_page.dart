@@ -54,7 +54,7 @@ class CartPage extends StatelessWidget {
                                     direction == DismissDirection.endToStart;
                                     await controller.deleteProduct(
                                         controller.cartProductModel[index]);
-                                        controller.update();
+                                    controller.update();
                                   },
                                   child: Row(
                                     children: [
@@ -78,8 +78,10 @@ class CartPage extends StatelessWidget {
                                             controller
                                                 .cartProductModel[index].name!,
                                             style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                           Text(
                                             controller
